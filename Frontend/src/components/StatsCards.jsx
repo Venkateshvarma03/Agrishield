@@ -12,14 +12,14 @@ function StatsCards() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:5000/api/dashboard/summary", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/dashboard/summary`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
       .then((d) => d.activeCrops !== undefined && setSummary(d))
       .catch(() => {});
 
-    fetch("http://localhost:5000/api/weather/live")
+    fetch(`${import.meta.env.VITE_API_URL}/api/weather/live`)
       .then((res) => res.json())
       .then((d) => Array.isArray(d.alerts) && setAlertCount(d.alerts.length))
       .catch(() => {});

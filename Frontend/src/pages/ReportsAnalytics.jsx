@@ -30,7 +30,7 @@ function ReportsAnalytics() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:5000/api/reports/summary", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/reports/summary`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())

@@ -17,7 +17,7 @@ function GovtSchemes() {
   const [schemes, setSchemes] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/govt-schemes")
+    fetch(`${import.meta.env.VITE_API_URL}/api/govt-schemes`)
       .then((res) => res.json())
       .then((data) => setSchemes(Array.isArray(data) ? data : []));
   }, []);

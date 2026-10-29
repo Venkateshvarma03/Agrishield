@@ -17,7 +17,7 @@ function AIAdvisory() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/weather/live")
+    fetch(`${import.meta.env.VITE_API_URL}/api/weather/live`)
       .then((res) => res.json())
       .then((d) => (d.forecast ? setData(d) : setError(d.message || "Could not load advisory")))
       .catch(() => setError("Could not load advisory"));

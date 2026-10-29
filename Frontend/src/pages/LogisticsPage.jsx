@@ -16,8 +16,8 @@ function LogisticsPage() {
 
   const loadTransports = () => {
     const url = districtFilter
-      ? `http://localhost:5000/api/transport?district=${districtFilter}`
-      : "http://localhost:5000/api/transport";
+      ? `${import.meta.env.VITE_API_URL}/api/transport?district=${districtFilter}`
+      : `${import.meta.env.VITE_API_URL}/api/transport`;
     fetch(url)
       .then((res) => res.json())
       .then((data) => setTransports(data));
@@ -25,7 +25,7 @@ function LogisticsPage() {
 
   const loadBookings = () => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:5000/api/transport-bookings", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/transport-bookings`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -57,7 +57,7 @@ function LogisticsPage() {
     setError("");
     const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:5000/api/transport/${selected._id}/book`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/transport/${selected._id}/book`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -85,7 +85,7 @@ function LogisticsPage() {
     setCancellingId(id);
     const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:5000/api/transport-bookings/${id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/transport-bookings/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })

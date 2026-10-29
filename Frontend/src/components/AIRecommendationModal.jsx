@@ -16,7 +16,7 @@ function AIRecommendationModal({ crop, onClose }) {
     setResult("");
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:5000/api/agent/recommend", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/agent/recommend`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

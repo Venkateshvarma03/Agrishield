@@ -13,7 +13,7 @@ export default function CropsOverview() {
   const [aiCrop, setAiCrop] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/crops")
+    fetch(`${import.meta.env.VITE_API_URL}/api/crops`)
       .then((res) => res.json())
       .then((data) => setCrops(data));
   }, []);
@@ -21,7 +21,7 @@ export default function CropsOverview() {
   const handleSell = (id) => {
     const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:5000/api/crops/${id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/crops/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export default function CropsOverview() {
   const handleDelete = (id) => {
     const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:5000/api/crops/${id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/crops/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     }).then(() => {

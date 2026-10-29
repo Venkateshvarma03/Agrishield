@@ -44,30 +44,34 @@ function VoiceAssistant() {
   };
 
   const sendAudio = async (audioBlob) => {
-    const formData = new FormData();
-    formData.append("audio", audioBlob, "recording.webm");
+  const formData = new FormData();
+  formData.append("audio", audioBlob, "recording.webm");
+  const token = localStorage.getItem("token");
 
-    try {
-      const res = await fetch("http://localhost:5000/api/voice/query", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/voice/query`, {
+      method: "POST",
+      // No Content-Type here: the browser sets it, including the upload boundary
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+    const data = await res.json();
 
-      if (data.error) {
-        setError(data.error);
-      } else {
-        setTranscript(data.transcribed_text);
-        setAnswer(data.answer);
-        speakAnswer(data.answer);
-      }
-    } catch (err) {
-      setError("Couldn't reach the voice assistant. Please try again.");
-    } finally {
-      setProcessing(false);
+    if (res.status === 401) {
+      setError("Your session has expired. Please log in again.");
+    } else if (!res.ok || data.error) {
+      setError(data.error || data.message || "The voice assistant could not answer.");
+    } else {
+      setTranscript(data.transcribed_text);
+      setAnswer(data.answer);
+      speakAnswer(data.answer);
     }
-  };
-
+  } catch (err) {
+    setError("Couldn't reach the voice assistant. Please try again.");
+  } finally {
+    setProcessing(false);
+  }
+};
   const speakAnswer = (text) => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-IN";

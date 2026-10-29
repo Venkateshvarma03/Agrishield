@@ -17,7 +17,7 @@ function InsurancePage() {
   const token = localStorage.getItem("token");
 
   const loadPolicies = () => {
-    fetch("http://localhost:5000/api/insurance-policies", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/insurance-policies`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -25,7 +25,7 @@ function InsurancePage() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/insurance-plans")
+    fetch(`${import.meta.env.VITE_API_URL}/api/insurance-plans`)
       .then((res) => res.json())
       .then((data) => setPlans(data));
     loadPolicies();
@@ -56,7 +56,7 @@ function InsurancePage() {
     setSubmitting(true);
     setError("");
 
-    fetch("http://localhost:5000/api/insurance-policies", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/insurance-policies`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -82,7 +82,7 @@ function InsurancePage() {
     if (cancellingId) return;
     setCancellingId(id);
 
-    fetch(`http://localhost:5000/api/insurance-policies/${id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/insurance-policies/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })

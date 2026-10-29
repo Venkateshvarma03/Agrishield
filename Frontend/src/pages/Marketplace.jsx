@@ -44,7 +44,7 @@ function Marketplace() {
   const jsonHeaders = { "Content-Type": "application/json", ...authHeaders };
 
   const load = (path, setter) =>
-    fetch(`http://localhost:5000/api/${path}`, { headers: authHeaders })
+    fetch(`${import.meta.env.VITE_API_URL}/api/${path}`, { headers: authHeaders })
       .then((res) => res.json())
       .then((data) => setter(Array.isArray(data) ? data : []));
 
@@ -70,7 +70,7 @@ function Marketplace() {
     setSubmitting(true);
     setError("");
 
-    fetch("http://localhost:5000/api/listings", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/listings`, {
       method: "POST",
       headers: jsonHeaders,
       body: JSON.stringify(listingForm),
@@ -96,7 +96,7 @@ function Marketplace() {
     setSubmitting(true);
     setError("");
 
-    fetch(`http://localhost:5000/api/listings/${offerTarget._id}/offers`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/listings/${offerTarget._id}/offers`, {
       method: "POST",
       headers: jsonHeaders,
       body: JSON.stringify(offerForm),
@@ -125,7 +125,7 @@ function Marketplace() {
 
   const respond = (offerId, decision) =>
     act(offerId, () =>
-      fetch(`http://localhost:5000/api/offers/${offerId}/respond`, {
+      fetch(`${import.meta.env.VITE_API_URL}/api/offers/${offerId}/respond`, {
         method: "PATCH",
         headers: jsonHeaders,
         body: JSON.stringify({ decision }),
@@ -134,12 +134,12 @@ function Marketplace() {
 
   const withdrawOffer = (offerId) =>
     act(offerId, () =>
-      fetch(`http://localhost:5000/api/offers/${offerId}`, { method: "DELETE", headers: authHeaders })
+      fetch(`${import.meta.env.VITE_API_URL}/api/offers/${offerId}`, { method: "DELETE", headers: authHeaders })
     );
 
   const removeListing = (listingId) =>
     act(listingId, () =>
-      fetch(`http://localhost:5000/api/listings/${listingId}`, { method: "DELETE", headers: authHeaders })
+      fetch(`${import.meta.env.VITE_API_URL}/api/listings/${listingId}`, { method: "DELETE", headers: authHeaders })
     );
 
   const inputClass = "w-full border border-gray-300 rounded-lg px-3 py-2 text-sm";

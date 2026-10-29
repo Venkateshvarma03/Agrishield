@@ -4,7 +4,7 @@ function LiveMarketPrices() {
   const [prices, setPrices] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/live-market-prices")
+    fetch(`${import.meta.env.VITE_API_URL}/api/live-market-prices`)
       .then((res) => res.json())
       .then((data) => setPrices(data));
   }, []);

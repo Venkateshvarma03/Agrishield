@@ -13,7 +13,7 @@ function MarketPrices() {
   useEffect(() => {
     let isMounted = true;
 
-    fetch("http://localhost:5000/api/market-prices")
+    fetch(`${import.meta.env.VITE_API_URL}/api/market-prices`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to fetch market prices");

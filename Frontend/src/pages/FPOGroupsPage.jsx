@@ -11,7 +11,7 @@ function FPOGroupsPage() {
   const authHeaders = { Authorization: `Bearer ${token}` };
 
   const loadFpos = () => {
-    fetch("http://localhost:5000/api/fpos", { headers: authHeaders })
+    fetch(`${import.meta.env.VITE_API_URL}/api/fpos`, { headers: authHeaders })
       .then((res) => res.json())
       .then((data) => setFpos(Array.isArray(data) ? data : []));
   };
@@ -23,7 +23,7 @@ function FPOGroupsPage() {
     setBusyId(fpo._id);
     setError("");
 
-    const url = `http://localhost:5000/api/fpos/${fpo._id}/${fpo.joined ? "leave" : "join"}`;
+    const url = `${import.meta.env.VITE_API_URL}/api/fpos/${fpo._id}/${fpo.joined ? "leave" : "join"}`;
 
     fetch(url, {
       method: fpo.joined ? "DELETE" : "POST",

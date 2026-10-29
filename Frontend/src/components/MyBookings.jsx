@@ -6,7 +6,7 @@ function MyBookings({ refreshKey = 0, onChange = () => {} }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:5000/api/bookings", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/bookings`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -18,7 +18,7 @@ function MyBookings({ refreshKey = 0, onChange = () => {} }) {
     setCancellingId(id);
     const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:5000/api/bookings/${id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/bookings/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })

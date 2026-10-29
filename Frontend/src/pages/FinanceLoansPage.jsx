@@ -25,7 +25,7 @@ function FinanceLoansPage() {
   const token = localStorage.getItem("token");
 
   const loadApplications = () => {
-    fetch("http://localhost:5000/api/loan-applications", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/loan-applications`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -33,7 +33,7 @@ function FinanceLoansPage() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/loan-schemes")
+    fetch(`${import.meta.env.VITE_API_URL}/api/loan-schemes`)
       .then((res) => res.json())
       .then((data) => setSchemes(data));
     loadApplications();
@@ -59,7 +59,7 @@ function FinanceLoansPage() {
     setSubmitting(true);
     setError("");
 
-    fetch("http://localhost:5000/api/loan-applications", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/loan-applications`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -85,7 +85,7 @@ function FinanceLoansPage() {
     if (withdrawingId) return;
     setWithdrawingId(id);
 
-    fetch(`http://localhost:5000/api/loan-applications/${id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/loan-applications/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })

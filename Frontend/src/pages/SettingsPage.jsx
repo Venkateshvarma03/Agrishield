@@ -20,7 +20,7 @@ function SettingsPage() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/me", { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`${import.meta.env.VITE_API_URL}/api/me`, { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
       .then((data) => {
         if (data.email) {
@@ -39,7 +39,7 @@ function SettingsPage() {
     setSavingProfile(true);
     setProfileMsg({ type: "", text: "" });
 
-    fetch("http://localhost:5000/api/me", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/me`, {
       method: "PUT",
       headers: jsonHeaders,
       body: JSON.stringify({ name }),
@@ -72,7 +72,7 @@ function SettingsPage() {
     }
 
     setSavingPassword(true);
-    fetch("http://localhost:5000/api/change-password", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/change-password`, {
       method: "PUT",
       headers: jsonHeaders,
       body: JSON.stringify({

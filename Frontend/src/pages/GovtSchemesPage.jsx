@@ -3,7 +3,7 @@ import {
   Landmark, ShieldCheck, Building2, ShoppingCart, CreditCard, Sprout, Search, ExternalLink, X,
 } from "lucide-react";
 
-const API = "http://localhost:5000";
+const API = `${import.meta.env.VITE_API_URL}`;
 
 const iconMap = { Landmark, ShieldCheck, Building2, ShoppingCart, CreditCard, Sprout };
 

@@ -44,7 +44,7 @@ function NearbyStorage({ refreshKey = 0, onChange = () => {} }) {
   const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/storage")
+    fetch(`${import.meta.env.VITE_API_URL}/api/storage`)
       .then((res) => res.json())
       .then((data) => setStorages(data));
   }, [refreshKey]);
@@ -66,7 +66,7 @@ function NearbyStorage({ refreshKey = 0, onChange = () => {} }) {
     setError("");
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:5000/api/bookings", {
+    fetch(`${import.meta.env.VITE_API_URL}/api/bookings`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
