@@ -29,9 +29,14 @@ const SchemeTracking = require("./models/SchemeTracking");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const upload = multer();
-
-app.use(cors());
+const upload = multer({ limits: { fileSize: 10 * 1024 * 1024 } }); // 10 MB cap
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL
+      ? process.env.FRONTEND_URL.split(",").map((s) => s.trim())
+      : true,
+  })
+);
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI)
@@ -158,21 +163,6 @@ app.get("/api/govt-schemes", async (req, res) => {
   res.json(schemes);
 });
 
-app.post("/api/govt-schemes", authMiddleware, async (req, res) => {
-  const newScheme = new Scheme(req.body);
-  await newScheme.save();
-  res.json(newScheme);
-});
-
-app.put("/api/govt-schemes/:id", authMiddleware, async (req, res) => {
-  const updated = await Scheme.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  res.json(updated);
-});
-
-app.delete("/api/govt-schemes/:id", authMiddleware, async (req, res) => {
-  await Scheme.findByIdAndDelete(req.params.id);
-  res.json({ message: "Scheme deleted" });
-});
 
 // ---------- Storage ----------
 app.get("/api/storage", async (req, res) => {
@@ -180,22 +170,6 @@ app.get("/api/storage", async (req, res) => {
   res.json(storages);
 });
 
-// Books a storage only if it is still available (check + update in one step)
-app.post("/api/storage/:id/book", authMiddleware, async (req, res) => {
-  try {
-    const updated = await Storage.findOneAndUpdate(
-      { _id: req.params.id, available: true },
-      { available: false },
-      { new: true }
-    );
-    if (!updated) {
-      return res.status(400).json({ message: "Storage already booked" });
-    }
-    res.json(updated);
-  } catch (err) {
-    res.status(500).json({ message: "Booking failed", error: err.message });
-  }
-});
 
 // ---------- Bookings ----------
 // Create a booking
@@ -346,15 +320,40 @@ app.delete("/api/transport-bookings/:id", authMiddleware, async (req, res) => {
   }
 });
 // ---------- AI Agent Recommendation ----------
-app.post("/api/agent/recommend", async (req, res) => {
+// ---------- AI Agent Recommendation ----------
+app.post("/api/agent/recommend", authMiddleware, async (req, res) => {
   try {
     const response = await axios.post(
       `${process.env.AGENT_SERVICE_URL}/api/agent/recommend`,
-      req.body
+      req.body,
+      { timeout: 90000 }
     );
     res.json(response.data);
   } catch (err) {
     res.status(500).json({ error: "Agent service unavailable", details: err.message });
+  }
+});
+
+// ---------- Voice Assistant ----------
+app.post("/api/voice/query", authMiddleware, upload.single("audio"), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: "No audio file received" });
+
+    const formData = new FormData();
+    formData.append("audio", req.file.buffer, {
+      filename: "recording.webm",
+      contentType: req.file.mimetype,
+    });
+
+    const response = await axios.post(
+      `${process.env.AGENT_SERVICE_URL}/api/voice/query`,
+      formData,
+      { headers: formData.getHeaders(), timeout: 90000 }
+    );
+
+    res.json(response.data);
+  } catch (err) {
+    res.status(500).json({ error: "Voice service unavailable", details: err.message });
   }
 });
 
@@ -427,27 +426,6 @@ app.delete("/api/loan-applications/:id", authMiddleware, async (req, res) => {
     res.json({ message: "Application withdrawn" });
   } catch (err) {
     res.status(500).json({ message: "Withdraw failed", error: err.message });
-  }
-});
-
-// ---------- Voice Assistant ----------
-app.post("/api/voice/query", upload.single("audio"), async (req, res) => {
-  try {
-    const formData = new FormData();
-    formData.append("audio", req.file.buffer, {
-      filename: "recording.webm",
-      contentType: req.file.mimetype,
-    });
-
-    const response = await axios.post(
-      `${process.env.AGENT_SERVICE_URL}/api/voice/query`,
-      formData,
-      { headers: formData.getHeaders() }
-    );
-
-    res.json(response.data);
-  } catch (err) {
-    res.status(500).json({ error: "Voice service unavailable", details: err.message });
   }
 });
 
