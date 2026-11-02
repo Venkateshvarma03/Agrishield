@@ -14,4 +14,4 @@ COPY . .
 
 EXPOSE 5001
 
-CMD gunicorn --bind 0.0.0.0:$PORT app:app
+CMD gunicorn --bind 0.0.0.0:${PORT:-5001} --workers 1 --threads 4 --timeout 120 app:app
